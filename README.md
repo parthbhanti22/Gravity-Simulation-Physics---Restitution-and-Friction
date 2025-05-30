@@ -1,102 +1,144 @@
-# ⚙️ Ball Physics Simulation using OpenGL & GLFW
+# 🏀 Ball Physics Simulation using C++ | OpenGL + GLFW
 
-This project simulates a simple 2D ball bouncing under the influence of gravity, friction, and elastic collisions using **OpenGL** and **GLFW**. It's a physics-based animation rendered in real-time with frame-capped timing using V-Sync.
+A smooth real-time physics simulation of a ball bouncing with **gravity**, **friction**, and **energy loss** — rendered using OpenGL and controlled using GLFW.
 
-> **Demo Video** 📽️  
-> ![Video Demo](video.webm)
-
----
-
-## 🚀 Features
-
-- Realistic ball motion using basic physics equations
-- Gravity acceleration, energy loss via restitution, and horizontal velocity decay through friction
-- Boundary collision detection and response (floor, ceiling, and walls)
-- Frame rate independence using `deltaTime`
+> ⚙️ Physics + 🔺 Graphics = 🚀 Pure nerdy satisfaction.
 
 ---
 
-## 🧪 Physics Concepts Used
+## 🎥 Demo
 
-This simulation is a tribute to classical mechanics. Here's the breakdown:
+https://user-images.githubusercontent.com/your-username/video.webm  
+*(Or use `video.webm` locally if uploading alongside this repo)*
 
-### 1. **Gravity**
-- **Equation**:  
-  `vy += gravity * deltaTime`
-- **Explanation**:  
-  Constant gravitational acceleration (`g = 980 px/s²`) pulls the ball downward every frame. It updates the vertical velocity `vy` over time.
+```html
+<!-- Optional: Embed video for GitHub Pages -->
+<video width="700" controls>
+  <source src="video.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
-### 2. **Position Update**
-- **Equations**:  
-  `x += vx * deltaTime`  
-  `y += vy * deltaTime`
-- **Explanation**:  
-  Positions in X and Y directions are updated using the current velocities. Ensures real-time motion with consistent speed regardless of frame rate.
 
-### 3. **Collision with Floor and Ceiling**
-- **Restitution** (bounciness):
-  ```cpp
-  vy *= -restitution;
-Coefficient of restitution e = 0.7 simulates energy loss after bounce. Negative sign reverses the direction of motion.
+🧪 Simulation Details
+Language: C++
 
-Friction on horizontal motion:
+Libraries: GLFW, OpenGL
+
+Type: 2D Physics simulation (bouncing ball)
+
+Features:
+
+Frame-rate independent motion
+
+Realistic gravity and restitution
+
+Friction slows down horizontal motion
+
+Ball comes to rest naturally
+
+Wall and ceiling collision handling
+
+🧠 Physics in Code
+Concept	Formula	Code Snippet
+Gravity	v = v + g * Δt	vy += gravity * deltaTime;
+Position	s = s + v * Δt	x += vx * deltaTime; y += vy * deltaTime;
+Bounce	v = -v * restitution	vy *= -restitution;
+Friction	v = v * friction	vx *= friction;
+Stopping Logic	`if (	v
+
+📦 Code Preview
+Here’s the core logic in main.cpp:
 
 cpp
 Copy code
-vx *= friction;
-Horizontal velocity gradually reduces after every floor bounce, simulating energy loss due to surface contact.
+float x = 400.0f, y = 100.0f;
+float vx = 100.0f, vy = 0.0f;
+float gravity = 980.0f;
+float restitution = 0.7f;
+float friction = 0.98f;
+float radius = 20.0f;
 
-4. Wall Collision
-Similar logic to floor/ceiling, but only affects the X-axis:
+while (!glfwWindowShouldClose(window)) {
+    float deltaTime = ...; // calculate time difference
 
-cpp
-Copy code
-vx *= -restitution;
-5. Stopping Condition
-Prevents infinite tiny bounces:
+    // Apply gravity
+    vy += gravity * deltaTime;
 
-cpp
-Copy code
-if(fabs(vy) < 5.0f && y + radius >= 600) vy = 0;
-If the vertical velocity is negligible and the ball touches the ground, it is stopped manually to simulate rest.
+    // Update position
+    x += vx * deltaTime;
+    y += vy * deltaTime;
 
-🧑‍💻 Code Breakdown
-cpp
-Copy code
-// Gravity-based vertical velocity update
-vy += gravity * deltaTime;
+    // Bounce off floor
+    if (y + radius >= 600) {
+        y = 600 - radius;
+        vy *= -restitution;
+        vx *= friction;
+        if (fabs(vy) < 5.0f) vy = 0;
+    }
 
-// Horizontal and vertical position update
-x += vx * deltaTime;
-y += vy * deltaTime;
+    // Wall collisions
+    if (x - radius <= 0 || x + radius >= 800)
+        vx *= -restitution;
 
-// Collision checks
-if (y + radius >= 600) { /* Floor bounce */ }
-if (x - radius <= 0 || x + radius >= 800) { /* Wall bounce */ }
-🛠️ Dependencies
-GLFW – window creation and input
-
-OpenGL – for rendering
-
-GLU / GLEW – not directly used here, but often required in larger OpenGL projects
-
-📦 How to Run
-🧱 Prerequisites
-GLFW installed (e.g., via vcpkg or manually)
-
-OpenGL development environment set up (MinGW, MSVC, etc.)
-
-🔧 Build & Run
-bash
-Copy code
-g++ main.cpp -o ball_sim -lglfw3 -lopengl32 -lgdi32
-./ball_sim
-Adjust link flags based on your OS and how GLFW/OpenGL is set up.
-
+    // Clear & draw
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawBall(x, y, radius);
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
 📂 File Structure
-bash
+css
 Copy code
 .
-├── main.cpp            # Ball simulation source code
-├── video.webm          # Demo video file
-└── README.md           # This file
+├── main.cpp         # Simulation source code
+├── video.webm       # Demo video (use .gif for GitHub preview)
+└── README.md        # This file
+🔧 Setup & Build
+Requirements
+C++ compiler (g++, clang, MSVC)
+
+OpenGL and GLFW installed
+
+🛠️ Compile Commands
+Windows (MinGW)
+bash
+Copy code
+g++ main.cpp -o BallSim.exe -lglfw3 -lopengl32 -lgdi32
+BallSim.exe
+Linux
+bash
+Copy code
+g++ main.cpp -o ball_sim -lglfw -lGL
+./ball_sim
+macOS
+bash
+Copy code
+g++ main.cpp -o ball_sim -lglfw -framework OpenGL
+./ball_sim
+🎮 Controls
+No keyboard/mouse input needed – it's fully automatic.
+Just launch and enjoy the bounce loop.
+
+💡 Enhancements (TODO Ideas)
+Add multiple balls with collision response
+
+Custom terrain with slopes
+
+Sound effects on impact
+
+UI sliders to control gravity & restitution
+
+Add rotation / torque mechanics
+
+🔥 Showcase Your Version
+Feel free to fork, tweak gravity or friction, and upload your own video.webm or .gif for a cool GitHub portfolio project. You’ll understand 10x more about physics this way than you ever did in class.
+
+👨‍💻 Author
+Parth Bhanti
+🚀 Computational Physics + Code Enthusiast
+🎓 2nd Year CSE @ VIT Bhopal
+🔗 LinkedIn | 🧠 Particle Pulse
+
+🪪 License
+MIT License.
+Use, modify, break, remix — just don't claim you invented Newton.
