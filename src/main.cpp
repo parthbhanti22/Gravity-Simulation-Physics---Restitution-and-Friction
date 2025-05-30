@@ -20,7 +20,7 @@ void drawBall(float x, float y, float radius) {
 int main() {
     if (!glfwInit()) return -1;
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Ball Drop", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Ball Physics", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -43,8 +43,11 @@ int main() {
     float x = 400.0f;
     float y = 100.0f;
     float radius = 20.0f;
-    float velocity = 0.0f;
-    float gravity = 0.5f;
+    float vx = 150.0f;
+    float vy = 0.0f;
+    float gravity = 980.0f;
+    float restitution = 0.7f;
+    float friction = 0.98f;
 
     float lastTime = glfwGetTime();
 
@@ -55,19 +58,40 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        drawBall(x, y, radius);
+        drawBall(x,y,radius);
 
-        // Apply gravity scaled by deltaTime
-        velocity += gravity * deltaTime * 60.0f;  // multiplied by 60 to normalize gravity to approx 60 FPS
-        y += velocity * deltaTime * 60.0f;
+        vy += gravity*deltaTime;  //vy = uy+gt  (initially uy=0)
+        x += vx*deltaTime;  //pos = vel*time
+        y += vy*deltaTime;  //pos = vel*time
 
-        if (y - radius > 600) {
-            y = -radius;
-            velocity = 0.0f;
+        //Floor and ceiling collision
+        if(y+radius >= 600){
+            y = 600-radius;
+            vy *= -restitution;  //vy  becomes by*e(coeffecient of restitution)
+            vx *= friction; //vx becomes vx*u(coeffecient of friction)
+        }
+
+        else if(y-radius <= 0){
+            y = radius;
+            vy *= -restitution;
+        }
+
+        if(x-radius <= 0){
+            x = radius;
+            vx *= -restitution;
+        }
+        else if(x+radius >=800){
+            x = 800-radius;
+            vx *= restitution;
+        }
+
+        if(fabs(vy)<5.0f && y+radius>=600){
+            vy = 0;
         }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
     }
 
     glfwTerminate();
