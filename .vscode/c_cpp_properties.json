@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "windows-gcc-x64",
+            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
+            "includePath": [
+                "d:/Projects/gravity-sim/**",
+                "C:/msys64/mingw64/include",
+                "C:/msys64/mingw64/include/GLFW",
+                "C:/msys64/mingw64/include/GL"
+            ],
+            "defines": [],
+            "intelliSenseMode": "windows-gcc-x64",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "browse": {
+                "path": [
+                    "C:/msys64/mingw64/include",
+                    "C:/msys64/mingw64/include/GLFW",
+                    "C:/msys64/mingw64/include/GL"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
