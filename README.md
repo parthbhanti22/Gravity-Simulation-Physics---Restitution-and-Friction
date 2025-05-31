@@ -101,6 +101,7 @@ while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
+```
 🔗 LinkedIn | 🧠 Particle Pulse
 
 🪪 License
