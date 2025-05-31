@@ -1,53 +1,185 @@
+
 # 🧪 Ball Physics Simulation in C++ using OpenGL & GLFW
 
 This project is a **real-time 2D physics simulation** of a ball bouncing under the effects of **gravity**, **restitution**, and **friction**, rendered using **OpenGL** and managed through the **GLFW** windowing system.
 
-> 👀 **Demo Video**  
-> 🎥 [Click here to view the demo](./video.webm) *(locally, if supported)*  
-> Or embed a `.gif` for preview if you're planning to share it on GitHub (GitHub doesn't play `.webm` inline).
+> 🎥 **Demo Video**  
+> If GitHub doesn’t support `.webm`, convert it to `.gif` using `ffmpeg` (shown below).
 
 ---
 
-## 🖼️ Preview (Optional GIF version if needed)
+## 🎬 Preview
 
-If you'd like to embed a demo directly, convert `video.webm` to `demo.gif`:
+Convert your video for GitHub preview:
+
 ```bash
 ffmpeg -i video.webm demo.gif
 ```
-![Ball Physics Simulation](demo.gif)
 
-# 🧠 Motivation
+Embed with:
 
-This simulation was created to visually demonstrate **Newtonian mechanics** in a game-like environment, focusing on:
+```md
+![Ball Physics Demo](demo.gif)
+```
 
-* How **gravity** affects objects over time.
-* How **energy is conserved or lost** in collisions (via **restitution**).
-* How surfaces apply **friction**, reducing velocity.
+---
 
+## 📐 Physics Concepts
 
-  # 📐 Physics Concepts in Depth
+### 🧲 Gravity
 
-The core of this simulation is based on the fundamental laws of motion:
-
-## 1. Gravity
-
-**Physics Formula:**
-$v_y = v_{y_0} + g \cdot \Delta t$
-
-**Code:**
 ```cpp
 vy += gravity * deltaTime;
 ```
-## 2. Position Update
-**Physics Formula:**
-s = s + v * Δt
 
-Code:
+Adds downward acceleration to simulate gravity.
+
+---
+
+### 🚀 Motion Update
 
 ```cpp
 x += vx * deltaTime;
 y += vy * deltaTime;
 ```
-Explanation:
-The ball’s new position in X and Y is computed using the current velocity and time elapsed. This keeps the movement frame rate independent.
 
+Moves the ball using current velocity.
+
+---
+
+### 🧱 Restitution (Bounce)
+
+```cpp
+vy *= -restitution;
+```
+
+Bounces the ball with energy loss.
+
+---
+
+### 🧊 Friction
+
+```cpp
+vx *= friction;
+```
+
+Reduces horizontal speed after bouncing.
+
+---
+
+### 🛑 Stop Condition
+
+```cpp
+if (fabs(vy) < 5.0f && y + radius >= 600) {
+    vy = 0;
+}
+```
+
+Stops bouncing when motion is negligible.
+
+---
+
+### ⛔ Boundary Collision
+
+```cpp
+if (x - radius <= 0 || x + radius >= 800)
+    vx *= -restitution;
+
+if (y - radius <= 0)
+    vy *= -restitution;
+```
+
+Handles wall and ceiling collisions.
+
+---
+
+## 💻 Main Loop Snippet
+
+```cpp
+vy += gravity * deltaTime;
+x += vx * deltaTime;
+y += vy * deltaTime;
+
+if (y + radius >= 600) {
+    y = 600 - radius;
+    vy *= -restitution;
+    vx *= friction;
+} else if (y - radius <= 0) {
+    y = radius;
+    vy *= -restitution;
+}
+
+if (x - radius <= 0) {
+    x = radius;
+    vx *= -restitution;
+} else if (x + radius >= 800) {
+    x = 800 - radius;
+    vx *= restitution;
+}
+
+if (fabs(vy) < 5.0f && y + radius >= 600) {
+    vy = 0;
+}
+```
+
+---
+
+## 🧾 Build Instructions
+
+### 🪟 Windows
+
+```bash
+g++ main.cpp -o ball_sim -lglfw3 -lopengl32 -lgdi32
+./ball_sim
+```
+
+### 🐧 Linux
+
+```bash
+g++ main.cpp -o ball_sim -lglfw -lGL
+./ball_sim
+```
+
+### 🍎 MacOS
+
+```bash
+g++ main.cpp -o ball_sim -lglfw -framework OpenGL
+./ball_sim
+```
+
+---
+
+## 🧠 Learning Outcomes
+
+- Delta time-based motion
+- Classical physics application
+- Real-time rendering with OpenGL
+- Window control using GLFW
+
+---
+
+## 📂 File Structure
+
+```
+.
+├── main.cpp
+├── video.webm
+├── demo.gif
+└── README.md
+```
+
+---
+
+## 🧑‍💻 Author
+
+**Parth Bhanti**  
+2nd Year CSE @ VIT Bhopal  
+Passionate about computational physics + graphics
+
+---
+
+🪪 License
+MIT License.
+Use, modify, break, remix — just don't claim you invented Newton.
+
+---
