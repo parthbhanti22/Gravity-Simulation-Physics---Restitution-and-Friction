@@ -11,46 +11,52 @@ A smooth real-time physics simulation of a ball bouncing with **gravity**, **fri
 https://user-images.githubusercontent.com/your-username/video.webm  
 *(Or use `video.webm` locally if uploading alongside this repo)*
 
-```html
-<!-- Optional: Embed video for GitHub Pages -->
-<video width="700" controls>
-  <source src="video.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
 
 
-🧪 Simulation Details
-Language: C++
 
-Libraries: GLFW, OpenGL
+#  bouncing-ball-simulation
 
-Type: 2D Physics simulation (bouncing ball)
+A simple yet engaging 2D physics simulation of a bouncing ball, built with C++, GLFW, and OpenGL.
 
-Features:
+---
 
-Frame-rate independent motion
+## 🧪 Simulation Details
 
-Realistic gravity and restitution
+This project brings basic Newtonian physics to life in a 2D environment.
 
-Friction slows down horizontal motion
+* **Language**: C++
+* **Libraries**: GLFW, OpenGL
+* **Type**: 2D Physics simulation (bouncing ball)
 
-Ball comes to rest naturally
+### Features:
 
-Wall and ceiling collision handling
+* **Frame-rate independent motion**: Ensures consistent behavior across different hardware.
+* **Realistic gravity and restitution**: The ball falls and bounces naturally.
+* **Friction**: Horizontal motion slows down after floor impacts.
+* **Natural resting state**: The ball eventually settles on the floor.
+* **Collision handling**: Detects and responds to collisions with walls and the ceiling.
 
-🧠 Physics in Code
-Concept	Formula	Code Snippet
-Gravity	v = v + g * Δt	vy += gravity * deltaTime;
-Position	s = s + v * Δt	x += vx * deltaTime; y += vy * deltaTime;
-Bounce	v = -v * restitution	vy *= -restitution;
-Friction	v = v * friction	vx *= friction;
-Stopping Logic	`if (	v
+---
 
-📦 Code Preview
-Here’s the core logic in main.cpp:
+## 🧠 Physics in Code
 
-cpp
-Copy code
+Here's a breakdown of how core physics concepts are implemented in the code:
+
+| Concept           | Formula             | Code Snippet                               |
+| :---------------- | :------------------ | :----------------------------------------- |
+| **Gravity** | $v = v_0 + g \cdot \Delta t$ | `vy += gravity * deltaTime;`               |
+| **Position Update** | $s = s_0 + v \cdot \Delta t$ | `x += vx * deltaTime;`<br>`y += vy * deltaTime;` |
+| **Bounce** | $v = -v_0 \cdot \text{restitution}$ | `vy *= -restitution;`                      |
+| **Friction** | $v = v_0 \cdot \text{friction}$ | `vx *= friction;`                          |
+| **Stopping Logic** | If $|v_y| < \text{threshold}$ and on ground | `if (fabs(vy) < 5.0f) vy = 0;`            |
+
+---
+
+## 📦 Code Preview
+
+Here’s the core logic from `main.cpp` that drives the simulation:
+
+```cpp
 float x = 400.0f, y = 100.0f;
 float vx = 100.0f, vy = 0.0f;
 float gravity = 980.0f;
@@ -73,12 +79,21 @@ while (!glfwWindowShouldClose(window)) {
         y = 600 - radius;
         vy *= -restitution;
         vx *= friction;
-        if (fabs(vy) < 5.0f) vy = 0;
+        if (fabs(vy) < 5.0f) vy = 0; // Resting state
     }
 
-    // Wall collisions
-    if (x - radius <= 0 || x + radius >= 800)
+    // Wall and ceiling collisions
+    if (y - radius <= 0) { // Ceiling
+        y = radius;
+        vy *= -restitution;
+    }
+    if (x - radius <= 0) { // Left Wall
+        x = radius;
         vx *= -restitution;
+    } else if (x + radius >= 800) { // Right Wall
+        x = 800 - radius;
+        vx *= -restitution; // Also apply restitution for wall bounces
+    }
 
     // Clear & draw
     glClear(GL_COLOR_BUFFER_BIT);
@@ -86,57 +101,6 @@ while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
-📂 File Structure
-css
-Copy code
-.
-├── main.cpp         # Simulation source code
-├── video.webm       # Demo video (use .gif for GitHub preview)
-└── README.md        # This file
-🔧 Setup & Build
-Requirements
-C++ compiler (g++, clang, MSVC)
-
-OpenGL and GLFW installed
-
-🛠️ Compile Commands
-Windows (MinGW)
-bash
-Copy code
-g++ main.cpp -o BallSim.exe -lglfw3 -lopengl32 -lgdi32
-BallSim.exe
-Linux
-bash
-Copy code
-g++ main.cpp -o ball_sim -lglfw -lGL
-./ball_sim
-macOS
-bash
-Copy code
-g++ main.cpp -o ball_sim -lglfw -framework OpenGL
-./ball_sim
-🎮 Controls
-No keyboard/mouse input needed – it's fully automatic.
-Just launch and enjoy the bounce loop.
-
-💡 Enhancements (TODO Ideas)
-Add multiple balls with collision response
-
-Custom terrain with slopes
-
-Sound effects on impact
-
-UI sliders to control gravity & restitution
-
-Add rotation / torque mechanics
-
-🔥 Showcase Your Version
-Feel free to fork, tweak gravity or friction, and upload your own video.webm or .gif for a cool GitHub portfolio project. You’ll understand 10x more about physics this way than you ever did in class.
-
-👨‍💻 Author
-Parth Bhanti
-🚀 Computational Physics + Code Enthusiast
-🎓 2nd Year CSE @ VIT Bhopal
 🔗 LinkedIn | 🧠 Particle Pulse
 
 🪪 License
