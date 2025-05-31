@@ -178,7 +178,8 @@ Passionate about computational physics + graphics
 
 ---
 
-##🏛️ License
+## 🏛️ License
+
 MIT License.
 Use, modify, break, remix — just don't claim you invented Newton.
 
