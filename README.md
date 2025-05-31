@@ -1,109 +1,53 @@
-# 🏀 Ball Physics Simulation using C++ | OpenGL + GLFW
+# 🧪 Ball Physics Simulation in C++ using OpenGL & GLFW
 
-A smooth real-time physics simulation of a ball bouncing with **gravity**, **friction**, and **energy loss** — rendered using OpenGL and controlled using GLFW.
+This project is a **real-time 2D physics simulation** of a ball bouncing under the effects of **gravity**, **restitution**, and **friction**, rendered using **OpenGL** and managed through the **GLFW** windowing system.
 
-> ⚙️ Physics + 🔺 Graphics = 🚀 Pure nerdy satisfaction.
-
----
-
-## 🎥 Demo
-
-https://user-images.githubusercontent.com/your-username/video.webm  
-*(Or use `video.webm` locally if uploading alongside this repo)*
-
-
-
-
-#  bouncing-ball-simulation
-
-A simple yet engaging 2D physics simulation of a bouncing ball, built with C++, GLFW, and OpenGL.
+> 👀 **Demo Video**  
+> 🎥 [Click here to view the demo](./video.webm) *(locally, if supported)*  
+> Or embed a `.gif` for preview if you're planning to share it on GitHub (GitHub doesn't play `.webm` inline).
 
 ---
 
-## 🧪 Simulation Details
+## 🖼️ Preview (Optional GIF version if needed)
 
-This project brings basic Newtonian physics to life in a 2D environment.
+If you'd like to embed a demo directly, convert `video.webm` to `demo.gif`:
+```bash
+ffmpeg -i video.webm demo.gif
+```
+![Ball Physics Simulation](demo.gif)
 
-* **Language**: C++
-* **Libraries**: GLFW, OpenGL
-* **Type**: 2D Physics simulation (bouncing ball)
+# 🧠 Motivation
 
-### Features:
+This simulation was created to visually demonstrate **Newtonian mechanics** in a game-like environment, focusing on:
 
-* **Frame-rate independent motion**: Ensures consistent behavior across different hardware.
-* **Realistic gravity and restitution**: The ball falls and bounces naturally.
-* **Friction**: Horizontal motion slows down after floor impacts.
-* **Natural resting state**: The ball eventually settles on the floor.
-* **Collision handling**: Detects and responds to collisions with walls and the ceiling.
+* How **gravity** affects objects over time.
+* How **energy is conserved or lost** in collisions (via **restitution**).
+* How surfaces apply **friction**, reducing velocity.
 
----
 
-## 🧠 Physics in Code
+  # 📐 Physics Concepts in Depth
 
-Here's a breakdown of how core physics concepts are implemented in the code:
+The core of this simulation is based on the fundamental laws of motion:
 
-| Concept           | Formula             | Code Snippet                               |
-| :---------------- | :------------------ | :----------------------------------------- |
-| **Gravity** | $v = v_0 + g \cdot \Delta t$ | `vy += gravity * deltaTime;`               |
-| **Position Update** | $s = s_0 + v \cdot \Delta t$ | `x += vx * deltaTime;`<br>`y += vy * deltaTime;` |
-| **Bounce** | $v = -v_0 \cdot \text{restitution}$ | `vy *= -restitution;`                      |
-| **Friction** | $v = v_0 \cdot \text{friction}$ | `vx *= friction;`                          |
-| **Stopping Logic** | If $|v_y| < \text{threshold}$ and on ground | `if (fabs(vy) < 5.0f) vy = 0;`            |
+## 1. Gravity
 
----
+**Physics Formula:**
+$v_y = v_{y_0} + g \cdot \Delta t$
 
-## 📦 Code Preview
+**Code:**
+```cpp
+vy += gravity * deltaTime;
+```
+## 2. Position Update
+**Physics Formula:**
+s = s + v * Δt
 
-Here’s the core logic from `main.cpp` that drives the simulation:
+Code:
 
 ```cpp
-float x = 400.0f, y = 100.0f;
-float vx = 100.0f, vy = 0.0f;
-float gravity = 980.0f;
-float restitution = 0.7f;
-float friction = 0.98f;
-float radius = 20.0f;
-
-while (!glfwWindowShouldClose(window)) {
-    float deltaTime = ...; // calculate time difference
-
-    // Apply gravity
-    vy += gravity * deltaTime;
-
-    // Update position
-    x += vx * deltaTime;
-    y += vy * deltaTime;
-
-    // Bounce off floor
-    if (y + radius >= 600) {
-        y = 600 - radius;
-        vy *= -restitution;
-        vx *= friction;
-        if (fabs(vy) < 5.0f) vy = 0; // Resting state
-    }
-
-    // Wall and ceiling collisions
-    if (y - radius <= 0) { // Ceiling
-        y = radius;
-        vy *= -restitution;
-    }
-    if (x - radius <= 0) { // Left Wall
-        x = radius;
-        vx *= -restitution;
-    } else if (x + radius >= 800) { // Right Wall
-        x = 800 - radius;
-        vx *= -restitution; // Also apply restitution for wall bounces
-    }
-
-    // Clear & draw
-    glClear(GL_COLOR_BUFFER_BIT);
-    drawBall(x, y, radius);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-}
+x += vx * deltaTime;
+y += vy * deltaTime;
 ```
-🔗 LinkedIn | 🧠 Particle Pulse
+Explanation:
+The ball’s new position in X and Y is computed using the current velocity and time elapsed. This keeps the movement frame rate independent.
 
-🪪 License
-MIT License.
-Use, modify, break, remix — just don't claim you invented Newton.
